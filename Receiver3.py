@@ -23,14 +23,8 @@ class Receiver3(Receiver2):
                 if len(seq_lis) > 0:
                     s.sendto((seq_lis[-1]).to_bytes(2, 'big'), addr)
                 if data[2] == 1 and len(seq_lis) == seq + 1:
-                    while True:
-                        try:
-                            s.settimeout(3)
-                            data, addr = s.recvfrom(self.buffer_size)
-                            seq = int.from_bytes(data[0:2], 'big')
-                            s.sendto((seq_lis[-1]).to_bytes(2, 'big'), addr)
-                        except timeout:
-                            break
+                    for _ in range(10):
+                        s.sendto(seq.to_bytes(2, 'big'), addr)
                     break
             s.close()
 
